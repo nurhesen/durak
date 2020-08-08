@@ -11,7 +11,6 @@ var card1 = [];
 var card2 = [];
 
 
-
 var all = [];
 
 for (var words = 0; words < 9; words++){
@@ -24,37 +23,40 @@ for (var words = 0; words < 9; words++){
 }
 var ralist = [];
 var ralist2 = [];
-var alleft = ralist + ralist2;
 
-function ranndss(rs, bass=[]){
-    var ran = Math.floor(Math.random()*35);
-    if (rs.includes(ran) || bass.includes(ran)){
-        ranndss(rs, bass);
-    }else{
-        rs.push(ran)
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
     }
+    return a;
 }
-[0,0,0,0,0,0,0].forEach(() => ranndss(ralist));
-[0,0,0,0,0,0,0].forEach(() => ranndss(ralist2, ralist));
+all = shuffle(all);
 
-
-for (var i = 0; i < 7; i++){
-    
-    
-    card1.push(all[ralist[i]]);
-    
-}
-document.querySelector('.cards1').innerHTML = `${card1}`;
-
-
-for (var i = 0; i < 7; i++){
-    
-    
-    card2.push(all[ralist2[i]]);
+for(var i = all.length-1; i >= 0; i--){
+    if (ralist.length < 7){
+        ralist.push(all[i]);
+        all.splice(i, 1);
+        
+    } else if (ralist2.length < 7){
+        ralist2.push(all[i]);
+        all.splice(i, 1);
+    }
+ 
     
 }
-document.querySelector('.cards2').innerHTML = `${card2}`;
-var allwent = ralist.concat(ralist2);
+
+
+
+document.querySelector('.cards1').innerHTML = `${ralist}`;
+
+
+
+document.querySelector('.cards2').innerHTML = `${ralist2}`;
+var allwent = ralist2.concat(ralist);
 
 
 void function(){
@@ -62,27 +64,28 @@ void function(){
     var curr = 0;
     var ort = [];
 
-    
 
-    for (var i = 0; i < all.length; i++){
-        if(allwent.includes(all[i])){
-            all.splice(i, 1)
 
-    }
-
-    }
 document.querySelector('.middle').innerHTML = `${all.join(' ')}`;
 var allss = document.querySelector('.middle').childNodes.forEach(async (x, m) => { var f = await x; if(f.style){f.style.zIndex = `${m}`;f.style.right = "55px"; f.style.top = '180px';f.style.position = 'absolute'} })
     
-    var xc = 0;
+var xc = 45;
+
 
     
     $( ".crd" ).draggable({
   start: function(event) {
-             var m = $(event.target).attr('class');
+            var m = $(event.target).attr('class');
         var f = (m.split(' '));
         console.log(f[0]);
-        xc = xc + 1; $(`.${f[0]}`).css("z-index",`${xc}`);
+      if (xc > 1000){
+        xc = 45;
+        $( ".crd" ).each(function() {
+              $( this ).css("z-index",`${xc}`);
+            }); 
+      }
+        xc = xc + 1; 
+      $(`.${f[0]}`).css("z-index",`${xc}`);
 
   },
   drag: function() {
@@ -100,10 +103,17 @@ var allss = document.querySelector('.middle').childNodes.forEach(async (x, m) =>
        var m = $(event.target).attr('class');
         var f = (m.split(' '));
         console.log(f[0]);
-        xc = xc + 1; $(`.${f[0]}`).css("z-index",`${xc}`);
+      if (xc > 1000){
+        xc = 45;
+        $( ".crd" ).each(function() {
+              $( this ).css("z-index",`${xc}`);
+            });      
+      }
+        xc = xc + 1; 
+        $(`.${f[0]}`).css("z-index",`${xc}`);
     });
 });
-    
+
     
     document.querySelector('.cards1').childNodes.forEach((x) => x.addEventListener('click', () => console.log(x.parentNode)))
     
